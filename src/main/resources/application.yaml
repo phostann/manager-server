@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: manager-server
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  datasource:
+    url: jdbc:mysql://192.168.31.120:3306/manager_db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 8888
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+auth:
+  secret: AHT0deYCFjWYgN75wOlY5X1gQQG73kfU40FrfbGQ4YpBSdsdfDDSJFsdshjk324098
+  expiration: 2592000 # s = 30d
+  refresh-expiration: 2592000 # s = 30d
+  token-prefix: Bearer
+  jwt-auth-header: Authorization
+  api-key-auth-header: X-Api-Key
+  white-list:
+    - /v1/auth/**
