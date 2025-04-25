@@ -16,5 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface ResourceMapper extends BaseMapper<Resource> {
 
-    Page<Resource> selectResourcesByProjectId(Page<ProjectResource> mybatisPage, Integer projectId, ProjectResourcePageDTO dto);
+    Page<Resource> selectResourcesByProjectId(Page<ProjectResource> page, Integer projectId, ProjectResourcePageDTO dto);
 }

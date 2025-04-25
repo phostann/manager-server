@@ -11,7 +11,8 @@ public class ProjectVO {
     private Integer id;
     private String name;
 
-    private List<Node> nodes;
+    private Integer nodeCount;
+    private Integer resourceCount;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

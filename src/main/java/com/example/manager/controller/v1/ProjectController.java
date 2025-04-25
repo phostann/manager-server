@@ -1,11 +1,9 @@
 package com.example.manager.controller.v1;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.manager.domain.dto.project.ProjectCreateDTO;
-import com.example.manager.domain.dto.project.ProjectPageDTO;
-import com.example.manager.domain.dto.project.ProjectResourcePageDTO;
-import com.example.manager.domain.dto.project.ProjectUpdateDTO;
+import com.example.manager.domain.dto.project.*;
 import com.example.manager.domain.vo.project.ProjectVO;
+import com.example.manager.entity.Node;
 import com.example.manager.entity.Project;
 import com.example.manager.response.R;
 import com.example.manager.service.IProjectService;
@@ -50,6 +48,12 @@ public class ProjectController {
     @GetMapping("/{projectId}/resources/page")
     public R<Page<com.example.manager.entity.Resource>> getResources(@PathVariable Integer projectId, @Valid ProjectResourcePageDTO dto) {
         Page<com.example.manager.entity.Resource> resources = projectService.selectResourcesByPage(projectId, dto);
+        return R.ok(resources);
+    }
+
+    @GetMapping("/{projectId}/nodes/page")
+    public R<Page<Node>> getNodes(@PathVariable Integer projectId, @Valid ProjectNodePageDTO dto) {
+        Page<Node> resources = projectService.selectNodesByPage(projectId, dto);
         return R.ok(resources);
     }
 

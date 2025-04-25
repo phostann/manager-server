@@ -1,11 +1,8 @@
 package com.example.manager.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -55,7 +52,12 @@ public class Node extends BaseEntity implements Serializable {
     private Integer projectId;
 
     /**
-     * 是否同步过当前项目资源；0 未同步；1 已同步；
+     * 是否自动同步
      */
-    private Boolean synced;
+    private Boolean autoSync;
+
+    /**
+     * 同步状态; 0: 未同步; 1: 同步中; 2: 同步失败; 3: 同步成功;
+     */
+    private Integer syncStatus;
 }

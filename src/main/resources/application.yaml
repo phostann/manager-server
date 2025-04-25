@@ -33,4 +33,5 @@ auth:
   jwt-auth-header: Authorization
   api-key-auth-header: X-Api-Key
   white-list:
-    - /v1/auth/**
+#    - /v1/auth/**
+    - /** # 暂时放行所有

@@ -1,6 +1,7 @@
 package com.example.manager.controller.v1;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.manager.domain.dto.node.NodeAutoSyncDTO;
 import com.example.manager.domain.dto.node.NodeCreateDTO;
 import com.example.manager.domain.dto.node.NodePageDTO;
 import com.example.manager.domain.dto.node.NodeUpdateDTO;
@@ -54,5 +55,12 @@ public class NodeController {
     public R<List<Node>> bindableList(@Valid NodePageDTO dto) {
         List<Node> page = nodeService.selectBindableNodeByPage(dto);
         return R.ok(page);
+    }
+
+    // 开关自动同步
+    @PutMapping("/{id}/auto-sync")
+    public R<Void> autoSync(@PathVariable Integer id, @Valid @RequestBody NodeAutoSyncDTO dto) {
+        nodeService.autoSync(id, dto);
+        return R.ok();
     }
 }

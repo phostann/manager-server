@@ -2,15 +2,10 @@ package com.example.manager.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.manager.converter.ProjectConverter;
-import com.example.manager.domain.dto.project.ProjectCreateDTO;
-import com.example.manager.domain.dto.project.ProjectPageDTO;
-import com.example.manager.domain.dto.project.ProjectResourcePageDTO;
-import com.example.manager.domain.dto.project.ProjectUpdateDTO;
+import com.example.manager.domain.dto.project.*;
 import com.example.manager.domain.vo.project.ProjectVO;
 import com.example.manager.entity.Node;
 import com.example.manager.entity.Project;
-import com.example.manager.entity.ProjectResource;
 import com.example.manager.exception.BusinessException;
 import com.example.manager.mapper.ProjectMapper;
 import com.example.manager.response.ErrorCode;
@@ -23,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -96,46 +88,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public Page<ProjectVO> selectProjectByPage(ProjectPageDTO dto) {
-        Page<Project> pageResult = this.lambdaQuery()
-                .like(StringUtils.hasText(dto.getName()), Project::getName, dto.getName())
-                .page(dto.toMybatisPage());
-        Page<ProjectVO> vos = new Page<>();
-        vos.setTotal(pageResult.getTotal());
-        vos.setSize(pageResult.getSize());
-        vos.setCurrent(pageResult.getCurrent());
-
-        List<ProjectVO> projects = pageResult.getRecords().stream().map(ProjectConverter.INSTANCE::entityToVO).toList();
-
-        vos.setRecords(projects);
-
-        if (projects.isEmpty()) {
-            return vos;
-        }
-
-        // 获取所有节点ID
-        Set<Integer> nodeIds = projects.stream()
-                .map(ProjectVO::getId)
-                .collect(Collectors.toSet());
-
-        // 查询节点
-        List<Node> nodes = nodeService.lambdaQuery()
-                .in(Node::getProjectId, nodeIds)
-                .list();
-
-        // 将节点按项目ID分组
-        Map<Integer, List<Node>> nodesByProjectId = nodes.stream()
-                .collect(Collectors.groupingBy(Node::getProjectId));
-
-        // 将节点设置到对应的项目中
-        for (ProjectVO project : projects) {
-            List<Node> projectNodes = nodesByProjectId.get(project.getId());
-            if (projectNodes != null) {
-                project.setNodes(projectNodes);
-            }
-        }
-
-        // 返回结果
-        return vos;
+        return this.baseMapper.selectProjects(dto.toMybatisPage(), dto);
     }
 
     @Override
@@ -179,7 +132,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         boolean updated = nodeService.lambdaUpdate()
                 .eq(Node::getId, nodeId)
                 .set(Node::getProjectId, id)
-                .set(Node::getSynced, false) // 绑定后设置为未同步
+                .set(Node::getAutoSync, false) // 绑定后设置为未同步
                 .update();
         if (!updated) {
             // 如果绑定失败，可能是因为节点不存在
@@ -206,7 +159,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         boolean updated = nodeService.lambdaUpdate()
                 .eq(Node::getId, nodeId)
                 .set(Node::getProjectId, null)
-                .set(Node::getSynced, false)
+                .set(Node::getAutoSync, false)
                 .update();
         if (!updated) {
             // 如果解绑失败，可能是因为节点不存在
@@ -248,5 +201,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Override
     public Page<com.example.manager.entity.Resource> selectResourcesByPage(Integer projectId, ProjectResourcePageDTO dto) {
         return resourceService.getResourcesByProjectId(projectId, dto);
+    }
+
+    @Override
+    public Page<Node> selectNodesByPage(Integer projectId, ProjectNodePageDTO dto) {
+        return nodeService.getNodesByProjectId(projectId, dto);
     }
 }

@@ -2,11 +2,9 @@ package com.example.manager.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.manager.domain.dto.project.ProjectCreateDTO;
-import com.example.manager.domain.dto.project.ProjectPageDTO;
-import com.example.manager.domain.dto.project.ProjectResourcePageDTO;
-import com.example.manager.domain.dto.project.ProjectUpdateDTO;
+import com.example.manager.domain.dto.project.*;
 import com.example.manager.domain.vo.project.ProjectVO;
+import com.example.manager.entity.Node;
 import com.example.manager.entity.Project;
 import com.example.manager.entity.Resource;
 import jakarta.validation.Valid;
@@ -42,4 +40,6 @@ public interface IProjectService extends IService<Project> {
     void unbindResources(Integer projectId, List<Integer> resourceIds);
 
     Page<Resource> selectResourcesByPage(Integer projectId, @Valid ProjectResourcePageDTO dto);
+
+    Page<Node> selectNodesByPage(Integer projectId, @Valid ProjectNodePageDTO dto);
 }

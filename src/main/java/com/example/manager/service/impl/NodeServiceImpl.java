@@ -1,21 +1,24 @@
 package com.example.manager.service.impl;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.manager.converter.NodeConverter;
+import com.example.manager.domain.dto.node.NodeAutoSyncDTO;
 import com.example.manager.domain.dto.node.NodeCreateDTO;
 import com.example.manager.domain.dto.node.NodePageDTO;
 import com.example.manager.domain.dto.node.NodeUpdateDTO;
+import com.example.manager.domain.dto.project.ProjectNodePageDTO;
 import com.example.manager.entity.Node;
 import com.example.manager.exception.BusinessException;
 import com.example.manager.mapper.NodeMapper;
 import com.example.manager.response.ErrorCode;
 import com.example.manager.service.INodeService;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>
@@ -122,5 +125,32 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
         return this.lambdaQuery()
                 .isNull(Node::getProjectId)
                 .list();
+    }
+
+    @Override
+    public Page<Node> getNodesByProjectId(Integer projectId, ProjectNodePageDTO dto) {
+        return this.lambdaQuery()
+                .eq(Node::getProjectId, projectId)
+                .like(StringUtils.hasText(dto.getName()), Node::getName, dto.getName())
+                .page(dto.toMybatisPage());
+    }
+
+    @Override
+    public void autoSync(Integer id, NodeAutoSyncDTO dto) {
+        // 检查节点是否存在
+        Node node = this.lambdaQuery()
+                .eq(Node::getId, id)
+                .one();
+        if (node == null) {
+            throw new BusinessException(ErrorCode.NODE_NOT_FOUND);
+        }
+        // 更新节点自动同步状态
+        boolean updated = this.lambdaUpdate()
+                .set(Node::getAutoSync, dto.getAutoSync())
+                .eq(Node::getId, id)
+                .update();
+        if (!updated) {
+            throw new BusinessException(ErrorCode.NODE_UPDATE_FAILED);
+        }
     }
 }

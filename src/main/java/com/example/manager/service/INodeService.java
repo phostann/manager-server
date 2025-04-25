@@ -1,9 +1,11 @@
 package com.example.manager.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.manager.domain.dto.node.NodeAutoSyncDTO;
 import com.example.manager.domain.dto.node.NodeCreateDTO;
 import com.example.manager.domain.dto.node.NodePageDTO;
 import com.example.manager.domain.dto.node.NodeUpdateDTO;
+import com.example.manager.domain.dto.project.ProjectNodePageDTO;
 import com.example.manager.entity.Node;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.validation.Valid;
@@ -31,4 +33,8 @@ public interface INodeService extends IService<Node> {
     Page<Node> selectNodeByPage(NodePageDTO dto);
 
     List<Node> selectBindableNodeByPage(@Valid NodePageDTO dto);
+
+    Page<Node> getNodesByProjectId(Integer projectId, ProjectNodePageDTO dto);
+
+    void autoSync(Integer id, NodeAutoSyncDTO dto);
 }
