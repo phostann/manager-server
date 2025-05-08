@@ -80,6 +80,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         boolean updated = this.lambdaUpdate()
                 .eq(Project::getId, id)
                 .set(StringUtils.hasText(dto.getName()), Project::getName, dto.getName())
+                .set(StringUtils.hasText(dto.getConfig()), Project::getConfig, dto.getConfig())
                 .update();
         if (!updated) {
             throw new BusinessException(ErrorCode.PROJECT_UPDATE_FAILED);

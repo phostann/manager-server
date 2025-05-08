@@ -33,4 +33,9 @@ public class Project extends BaseEntity implements Serializable {
      * 项目名称
      */
     private String name;
+
+    /**
+     * 项目配置
+     */
+    private String config;
 }

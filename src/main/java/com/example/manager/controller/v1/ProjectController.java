@@ -27,9 +27,9 @@ public class ProjectController {
         return R.ok();
     }
 
-    @PutMapping("/{id}")
-    public R<Void> update(@PathVariable("id") Integer id, @Valid @RequestBody ProjectUpdateDTO dto) {
-        projectService.updateProject(id, dto);
+    @PutMapping("/{projectId}")
+    public R<Void> update(@PathVariable("projectId") Integer projectId, @Valid @RequestBody ProjectUpdateDTO dto) {
+        projectService.updateProject(projectId, dto);
         return R.ok();
     }
 
@@ -39,9 +39,9 @@ public class ProjectController {
         return R.ok(page);
     }
 
-    @GetMapping("/{id}")
-    public R<Project> get(@PathVariable("id") Integer id) {
-        Project project = projectService.selectProjectById(id);
+    @GetMapping("/{projectId}")
+    public R<Project> get(@PathVariable("projectId") Integer projectId) {
+        Project project = projectService.selectProjectById(projectId);
         return R.ok(project);
     }
 
@@ -57,9 +57,9 @@ public class ProjectController {
         return R.ok(resources);
     }
 
-    @DeleteMapping("/{id}")
-    public R<Void> delete(@PathVariable("id") Integer id) {
-        projectService.deleteProject(id);
+    @DeleteMapping("/{projectId}")
+    public R<Void> delete(@PathVariable("projectId") Integer projectId) {
+        projectService.deleteProject(projectId);
         return R.ok();
     }
 
