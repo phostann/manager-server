@@ -34,7 +34,7 @@ public class ProjectController {
     }
 
     @GetMapping("/page")
-    public R<Page<ProjectVO>> list(@Valid ProjectPageDTO dto) {
+    public R<Page<ProjectVO>> page(@Valid ProjectPageDTO dto) {
         Page<ProjectVO> page = projectService.selectProjectByPage(dto);
         return R.ok(page);
     }
@@ -89,5 +89,11 @@ public class ProjectController {
                                    @RequestBody List<Integer> resourceIds) {
         projectService.unbindResources(projectId, resourceIds);
         return R.ok();
+    }
+
+    @GetMapping("/node/{nodeUid}/config")
+    public R<String> getConfigByNodeId(@PathVariable Integer nodeUid) {
+        String config = projectService.getConfigByNodeUid(nodeUid);
+        return R.ok(config);
     }
 }

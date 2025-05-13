@@ -153,4 +153,11 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
             throw new BusinessException(ErrorCode.NODE_UPDATE_FAILED);
         }
     }
+
+    @Override
+    public Node getNodeByUid(Integer nodeUid) {
+        return this.lambdaQuery()
+                .eq(Node::getUid, nodeUid)
+                .one();
+    }
 }

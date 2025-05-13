@@ -37,4 +37,6 @@ public interface INodeService extends IService<Node> {
     Page<Node> getNodesByProjectId(Integer projectId, ProjectNodePageDTO dto);
 
     void autoSync(Integer id, NodeAutoSyncDTO dto);
+
+    Node getNodeByUid(Integer nodeUid);
 }

@@ -42,4 +42,6 @@ public interface IProjectService extends IService<Project> {
     Page<Resource> selectResourcesByPage(Integer projectId, @Valid ProjectResourcePageDTO dto);
 
     Page<Node> selectNodesByPage(Integer projectId, @Valid ProjectNodePageDTO dto);
+
+    String getConfigByNodeUid(Integer nodeUid);
 }

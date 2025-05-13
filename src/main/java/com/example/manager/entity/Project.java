@@ -30,6 +30,11 @@ public class Project extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -1827672169691043727L;
 
     /**
+     * uuid
+     */
+    private String uid;
+
+    /**
      * 项目名称
      */
     private String name;

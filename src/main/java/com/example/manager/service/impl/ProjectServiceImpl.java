@@ -2,6 +2,7 @@ package com.example.manager.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.manager.converter.ProjectConverter;
 import com.example.manager.domain.dto.project.*;
 import com.example.manager.domain.vo.project.ProjectVO;
 import com.example.manager.entity.Node;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * <p>
@@ -51,6 +53,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         Project project = new Project();
         project.setName(dto.getName());
+        project.setUid(UUID.randomUUID().toString());
         boolean saved = this.save(project);
         if (!saved) {
             // 如果保存失败，可能是因为数据库问题
@@ -207,5 +210,27 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Override
     public Page<Node> selectNodesByPage(Integer projectId, ProjectNodePageDTO dto) {
         return nodeService.getNodesByProjectId(projectId, dto);
+    }
+
+    @Override
+    public String getConfigByNodeUid(Integer nodeUid) {
+        // 检查节点是否存在
+        Node node = nodeService.getNodeByUid(nodeUid);
+        if (node == null) {
+            throw new BusinessException(ErrorCode.NODE_NOT_FOUND);
+        }
+        // 检查节点是否绑定了项目
+        if (node.getProjectId() == null) {
+            throw new BusinessException(ErrorCode.PROJECT_NOT_FOUND, "节点未和任何项目关联");
+        }
+        // 获取项目配置
+        Project project = this.lambdaQuery()
+                .select(Project::getConfig)
+                .eq(Project::getId, node.getId())
+                .one();
+        if (project == null) {
+            throw new BusinessException(ErrorCode.PROJECT_NOT_FOUND, "项目未找到");
+        }
+        return project.getConfig();
     }
 }

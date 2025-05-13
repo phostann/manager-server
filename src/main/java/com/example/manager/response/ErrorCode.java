@@ -62,6 +62,11 @@ public enum ErrorCode {
     NODE_DELETE_FAILED(2404, "节点删除失败"),
     NODE_BOUNDED(2405, "节点已绑定"),
 
+    // 2500-2599: 文件上传/下载错误
+    FILE_UPLOAD_FAILED(2500, "文件上传失败"),
+    FILE_DOWNLOAD_FAILED(2501, "文件下载失败"),
+    FILE_NOT_FOUND(2502, "文件不存在"),
+
     // 4000-4999: Integration/external service errors
     INTEGRATION_ERROR(4000, "集成错误"),
     DATABASE_ERROR(4001, "数据库错误"),
