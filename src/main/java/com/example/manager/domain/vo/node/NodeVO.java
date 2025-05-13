@@ -7,4 +7,5 @@ public class NodeVO {
     private Integer id;
     private String name;
     private Integer status;
+    private Boolean deployed;
 }

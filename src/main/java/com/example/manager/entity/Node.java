@@ -60,4 +60,9 @@ public class Node extends BaseEntity implements Serializable {
      * 同步状态; 0: 未同步; 1: 同步中; 2: 同步失败; 3: 同步成功;
      */
     private Integer syncStatus;
+
+    /**
+     * 是否已同步
+     */
+    private Boolean deployed;
 }

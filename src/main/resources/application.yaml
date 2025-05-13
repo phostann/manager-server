@@ -29,6 +29,15 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+# Socket客户端配置
+socket:
+  host: localhost
+  port: 8080
+  path: /socket/node/111111
+  reconnect-interval: 5000
+  max-reconnect-attempts: 10000
+  heartbeat-interval: 30000
+
 auth:
   secret: AHT0deYCFjWYgN75wOlY5X1gQQG73kfU40FrfbGQ4YpBSdsdfDDSJFsdshjk324098
   expiration: 2592000 # s = 30d

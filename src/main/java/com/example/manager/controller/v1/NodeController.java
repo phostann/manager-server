@@ -63,4 +63,11 @@ public class NodeController {
         nodeService.autoSync(id, dto);
         return R.ok();
     }
+
+    // 初始化节点
+    @PostMapping("/init/{nodeId}")
+    public R<Void> init(@PathVariable("nodeId") Integer id) {
+        nodeService.initNode(id);
+        return R.ok();
+    }
 }

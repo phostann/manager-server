@@ -3,6 +3,9 @@ package com.example.manager.service.impl;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.manager.domain.SocketMessage;
+import com.example.manager.service.WebSocketClientService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +22,7 @@ import com.example.manager.exception.BusinessException;
 import com.example.manager.mapper.NodeMapper;
 import com.example.manager.response.ErrorCode;
 import com.example.manager.service.INodeService;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * <p>
@@ -30,6 +34,9 @@ import com.example.manager.service.INodeService;
  */
 @Service
 public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements INodeService {
+
+    @Resource
+    private WebSocketClientService wsClient;
 
     @Override
     public void createNode(NodeCreateDTO dto) {
@@ -159,5 +166,21 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
         return this.lambdaQuery()
                 .eq(Node::getUid, nodeUid)
                 .one();
+    }
+
+    @Override
+    public void initNode(Integer id) {
+        // 检查节点是否存在
+        Node node = this.lambdaQuery()
+                .eq(Node::getId, id)
+                .one();
+        if (node == null) {
+            throw new BusinessException(ErrorCode.NODE_NOT_FOUND);
+        }
+        SocketMessage message = SocketMessage.builder()
+                .type("init_node")
+                .data(node.getUid())
+                .build();
+        wsClient.sendMessage(message);
     }
 }

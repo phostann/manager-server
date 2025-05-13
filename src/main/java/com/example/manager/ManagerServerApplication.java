@@ -4,11 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+import com.example.manager.config.SocketConfig;
 import com.example.manager.properties.ApplicationConfig;
 import com.example.manager.properties.AuthConfigProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(value = {AuthConfigProperties.class, ApplicationConfig.class})
+@EnableConfigurationProperties(value = {AuthConfigProperties.class, ApplicationConfig.class, SocketConfig.class})
 public class ManagerServerApplication {
 
     public static void main(String[] args) {

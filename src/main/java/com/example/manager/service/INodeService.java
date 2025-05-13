@@ -39,4 +39,6 @@ public interface INodeService extends IService<Node> {
     void autoSync(Integer id, NodeAutoSyncDTO dto);
 
     Node getNodeByUid(Integer nodeUid);
+
+    void initNode(Integer id);
 }

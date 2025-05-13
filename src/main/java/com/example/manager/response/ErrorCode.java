@@ -61,6 +61,8 @@ public enum ErrorCode {
     NODE_UPDATE_FAILED(2403, "节点更新失败"),
     NODE_DELETE_FAILED(2404, "节点删除失败"),
     NODE_BOUNDED(2405, "节点已绑定"),
+    NODE_ALREADY_DEPLOYED(2406, "节点已部署"),
+    NODE_INIT_FAILED(2407, "节点初始化失败"),
 
     // 2500-2599: 文件上传/下载错误
     FILE_UPLOAD_FAILED(2500, "文件上传失败"),
