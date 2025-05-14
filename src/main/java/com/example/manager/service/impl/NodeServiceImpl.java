@@ -1,14 +1,5 @@
 package com.example.manager.service.impl;
 
-import java.util.List;
-import java.util.Objects;
-
-import com.example.manager.domain.SocketMessage;
-import com.example.manager.service.WebSocketClientService;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.manager.converter.NodeConverter;
@@ -17,12 +8,20 @@ import com.example.manager.domain.dto.node.NodeCreateDTO;
 import com.example.manager.domain.dto.node.NodePageDTO;
 import com.example.manager.domain.dto.node.NodeUpdateDTO;
 import com.example.manager.domain.dto.project.ProjectNodePageDTO;
+import com.example.manager.domain.dto.socket.SocketMessage;
 import com.example.manager.entity.Node;
+import com.example.manager.enums.MessageType;
 import com.example.manager.exception.BusinessException;
 import com.example.manager.mapper.NodeMapper;
 import com.example.manager.response.ErrorCode;
 import com.example.manager.service.INodeService;
-import org.springframework.web.client.RestTemplate;
+import com.example.manager.service.WebSocketClientService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -178,7 +177,7 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
             throw new BusinessException(ErrorCode.NODE_NOT_FOUND);
         }
         SocketMessage message = SocketMessage.builder()
-                .type("init_node")
+                .type(MessageType.INIT_NODE)
                 .data(node.getUid())
                 .build();
         wsClient.sendMessage(message);

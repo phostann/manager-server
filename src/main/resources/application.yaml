@@ -35,7 +35,6 @@ socket:
   port: 8080
   path: /socket/node/111111
   reconnect-interval: 5000
-  max-reconnect-attempts: 10000
   heartbeat-interval: 30000
 
 auth:

@@ -1,8 +1,8 @@
 package com.example.manager.service;
 
 import com.example.manager.config.SocketConfig;
-import com.example.manager.domain.SocketMessage;
-import com.example.manager.exception.BusinessException;
+import com.example.manager.domain.dto.socket.SocketMessage;
+import com.example.manager.enums.MessageType;
 import com.example.manager.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -59,10 +61,12 @@ public class WebSocketClientService {
 
             webSocketClient = new WebSocketClient(serverUri) {
                 @Override
-                public void onOpen(ServerHandshake handshakedata) {
+                public void onOpen(ServerHandshake handshakeData) {
                     log.info("成功连接到WebSocket服务器: {}", serverUri);
                     isConnected.set(true);
                     reconnectAttempts = 0;
+                    // 连接成功后发送路径消息
+                    sendPathMessage();
                     // 启动心跳机制
                     startHeartbeat();
                 }
@@ -95,6 +99,22 @@ public class WebSocketClientService {
         } catch (URISyntaxException e) {
             log.error("创建WebSocket URI出错: {}", e.getMessage(), e);
         }
+    }
+
+    /**
+     * 发送路径消息
+     */
+    private void sendPathMessage() {
+        Map<String, String> pathData = new HashMap<>();
+        pathData.put("path", socketConfig.getPath());
+
+        SocketMessage pathMessage = SocketMessage.builder()
+                .type(MessageType.PATH)
+                .data(pathData)
+                .build();
+
+        sendMessage(pathMessage);
+        log.info("已发送路径消息: {}", socketConfig.getPath());
     }
 
     /**
@@ -138,17 +158,27 @@ public class WebSocketClientService {
             SocketMessage message = JsonUtils.fromJson(messageJson, SocketMessage.class);
             if (message != null) {
                 switch (message.getType()) {
-                    case "ping":
+                    case PING:
                         // 收到ping，回复pong
-                        sendMessage(SocketMessage.pong());
+                        sendMessage(SocketMessage.builder()
+                                .type(MessageType.PONG)
+                                .build());
                         break;
-                    case "pong":
+                    case PONG:
                         // 收到pong，心跳确认
                         log.debug("收到服务器心跳响应");
                         break;
+                    case PATH:
+                        // 处理路径消息
+                        log.info("收到路径消息: {}", message.getData());
+                        break;
+                    case INIT_NODE:
+                        // 处理初始化节点消息
+                        log.info("收到初始化节点消息: {}", message.getData());
+                        break;
                     default:
                         // 处理其他类型消息
-                        log.info("收到未处理的消息类型: {}", message.getType());
+                        log.info("收到消息: type={}, data={}", message.getType(), message.getData());
                 }
             }
         } catch (Exception e) {
@@ -162,7 +192,9 @@ public class WebSocketClientService {
     private void startHeartbeat() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (isConnected.get()) {
-                sendMessage(SocketMessage.ping());
+                sendMessage(SocketMessage.builder()
+                        .type(MessageType.PING)
+                        .build());
             }
         }, 0, socketConfig.getHeartbeatInterval(), TimeUnit.MILLISECONDS);
     }
@@ -170,7 +202,7 @@ public class WebSocketClientService {
     /**
      * 发送消息
      */
-    public void sendMessage(SocketMessage message) throws Error {
+    public void sendMessage(SocketMessage message) {
         if (!isConnected.get() || webSocketClient == null) {
             log.warn("WebSocket未连接，无法发送消息");
             return;

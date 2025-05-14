@@ -1,12 +1,13 @@
-package com.example.manager.domain;
+package com.example.manager.domain.dto.socket;
 
+import com.example.manager.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Socket消息格式
+ * Socket消息格式，用于客户端和服务器之间传输数据
  */
 @Data
 @Builder
@@ -16,7 +17,7 @@ public class SocketMessage {
     /**
      * 消息类型
      */
-    private String type;
+    private MessageType type;
     
     /**
      * 消息内容
@@ -28,7 +29,7 @@ public class SocketMessage {
      */
     public static SocketMessage ping() {
         return SocketMessage.builder()
-                .type("ping")
+                .type(MessageType.PING)
                 .build();
     }
     
@@ -37,7 +38,7 @@ public class SocketMessage {
      */
     public static SocketMessage pong() {
         return SocketMessage.builder()
-                .type("pong")
+                .type(MessageType.PONG)
                 .build();
     }
-} 
+}

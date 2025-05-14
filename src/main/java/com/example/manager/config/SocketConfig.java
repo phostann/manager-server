@@ -31,7 +31,7 @@ public class SocketConfig {
     /**
      * 最大重连次数
      */
-    private int maxReconnectAttempts = 10;
+    private int maxReconnectAttempts = 10000;
     
     /**
      * 心跳间隔时间(毫秒)
