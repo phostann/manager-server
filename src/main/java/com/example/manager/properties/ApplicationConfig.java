@@ -8,4 +8,5 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "app")
 public class ApplicationConfig {
     private String uploadPath;
+    private String nodeRelayServer;
 }

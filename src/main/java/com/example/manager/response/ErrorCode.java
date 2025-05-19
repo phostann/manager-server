@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * Unified error codes for the application
- * 
+ * <p>
  * Error code structure:
  * - 1000-1999: Common system errors
  * - 2000-2999: Business/domain errors
@@ -17,7 +17,7 @@ import lombok.Getter;
 public enum ErrorCode {
     // Common success response
     SUCCESS(0, "成功"),
-    
+
     // 1000-1999: Common system errors
     SYSTEM_ERROR(1000, "系统错误"),
     PARAMETER_ERROR(1001, "参数错误"),
@@ -26,7 +26,7 @@ public enum ErrorCode {
 
     // 2000-2999: Business/domain errors
     BUSINESS_ERROR(2000, "业务错误"),
-    
+
     // 2100-2199: User domain errors
     USER_NOT_FOUND(2100, "用户不存在"),
     USER_EXISTS(2101, "用户已存在"),
@@ -34,7 +34,7 @@ public enum ErrorCode {
     USER_PASSWORD_ERROR(2103, "用户密码错误"),
     USER_LOGIN_ERROR(2104, "用户登录失败"),
     USER_LOGOUT_ERROR(2105, "用户登出失败"),
-    
+
     // 2200-2299: Project domain errors
     PROJECT_EXISTS(2200, "项目已存在"),
     PROJECT_CREATE_FAILED(2201, "项目创建失败"),
@@ -73,11 +73,13 @@ public enum ErrorCode {
     INTEGRATION_ERROR(4000, "集成错误"),
     DATABASE_ERROR(4001, "数据库错误"),
     REMOTE_SERVICE_ERROR(4002, "远程服务错误"),
-    
+
     // 5000-5999: Security/authentication errors
     UNAUTHORIZED(5000, "未授权"),
     FORBIDDEN(5001, "禁止访问"),
-    PASSWORD_NOT_MATCH(5002, "两次输入的密码不一致");
+    PASSWORD_NOT_MATCH(5002, "两次输入的密码不一致"),
+    PROXY_ERROR(5003, "转发错误"),
+    ;
 
     private final int code;
     private final String message;

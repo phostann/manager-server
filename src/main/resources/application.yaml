@@ -49,3 +49,4 @@ auth:
     - /** # 暂时放行所有
 app:
   upload-path: D:\chore
+  node-relay-server: http://localhost:8080
